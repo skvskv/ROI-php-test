@@ -1,0 +1,40 @@
+{
+  "name": "skvskv/ROI-test",
+  "type": "library",
+  "version": "0.1",
+  "description": "Test task for ROI",
+  "keywords": [""],
+  "homepage": "https://github.com/skvskv/ROI-test",
+  "license": "AS IS",
+  "authors": [
+    {
+      "name": "Konstantin Shpolvind",
+      "email": "skv@eml.ru"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-0": {
+      "lib\\": "",
+      "app\\": ""
+    }
+  },
+  "config": {
+    "github-oauth": {
+      "github.com": "d76860ecfc1f31013ca0be2768b4579aff69acdb"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/skvskv/PHP-DependencyInjectionContainer.git"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.5",
+    "symfony/yaml": "3.0.*@dev",
+    "twig/twig": "2.0.*@dev",
+    "skvskv/PHP-DependencyInjectionContainer": "*"
+  }
+}
