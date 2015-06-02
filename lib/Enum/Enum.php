@@ -39,7 +39,6 @@ abstract class Enum {
         }
         static::initArraysWhenNecessary();
         $this->index = static::$reverseIndex[ $constName ];
-
     }
 
     /**
@@ -56,6 +55,11 @@ abstract class Enum {
     final function get()
     {
         return $this->__toString();
+    }
+
+    final function getAssociatedValue()
+    {
+        return static::$constants[static::$forwardIndex[ $this->index ]];
     }
 
     static protected function initArrays()
@@ -89,14 +93,16 @@ abstract class Enum {
     function shiftPrev($allowUnderflow=false)
     {
         $idx = $this->index-1;
-        if(!array_key_exists($idx, static::$reverseIndex))
+        if(!array_key_exists($idx, static::$forwardIndex))
         {
             if ($allowUnderflow===true)
             {
-                $this->index = -1+count(static::$reverseIndex);
+                $this->index = -1+count(static::$forwardIndex);
             } else {
                 throw new EnumUnderflowException();
             }
+        } else {
+            $this->index = $idx;
         }
     }
 
@@ -107,7 +113,7 @@ abstract class Enum {
     function shiftNext($allowOverflow=false)
     {
         $idx = $this->index+1;
-        if(!array_key_exists($idx, static::$reverseIndex))
+        if(!array_key_exists($idx, static::$forwardIndex))
         {
             if ($allowOverflow===true)
             {
@@ -115,6 +121,8 @@ abstract class Enum {
             } else {
                 throw new EnumOverflowException();
             }
+        } else {
+            $this->index = $idx;
         }
     }
 }

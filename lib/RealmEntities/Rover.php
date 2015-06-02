@@ -4,32 +4,65 @@ namespace lib\RealmEntities;
 
 
 use lib\Enum\CardinalDirection;
+use lib\LandscapeContext\LandscapePointBase;
+use lib\LandscapeContext\PositionOutOfBoundariesException;
 
-abstract class Rover
+//abstract class Rover implements ILandscapePositionedObject
+class Rover implements ILandscapePositionedObject
 {
     /**
      * @var CardinalDirection
      */
     private $direction;
 
-    function __construct(CardinalDirection $direction)
+    /**
+     * @var LandscapePointBase
+     */
+    private $landscapePoint;
+
+    function __construct(CardinalDirection $direction, LandscapePointBase $landscapePoint)
     {
         $this->setDirection($direction);
+        $this->setLandscapePoint($landscapePoint);
+        $this->landscapePoint->getLandscapeContext()->putObject($this);
     }
 
-    function setDirection(CardinalDirection $direction)
+    private function setDirection(CardinalDirection $direction)
     {
         $this->direction = $direction;
     }
 
-    function rotateRight()
+    private function setLandscapePoint(LandscapePointBase $landscapePoint)
+    {
+        $this->landscapePoint = $landscapePoint;
+    }
+
+    /**
+     * @return LandscapePointBase
+     */
+    function getLandscapePoint()
+    {
+        $result = clone $this->landscapePoint;
+        return $result;
+    }
+
+    /**
+     * @return CardinalDirection
+     */
+    function getDirection()
+    {
+        $result = clone $this->direction;
+        return $result;
+    }
+
+    private function rotateRight()
     {
         $this->direction->rotateRight();
     }
 
-    function rotateLeft()
+    private function rotateLeft()
     {
-        $this->rotateLeft();
+        $this->direction->rotateLeft();
     }
 
     function rotate($directionLiteral)
@@ -48,6 +81,26 @@ abstract class Rover
         }
     }
 
-    abstract function moveAhead();
+    function moveAhead()
+    {
+        $lc = $this->landscapePoint->getLandscapeContext();
+        try {
+//            $tpt = $lc->getTargetPoint($this->landscapePoint, $this->direction);
+            $tpt = $lc->getTargetPoint($this);
+            $lc->removeObject($this);
+            $this->setLandscapePoint($tpt);
+            $lc->putObject($this);
+        } catch (PositionOutOfBoundariesException $e){
+            // Oops, the rover've reached the plateau boundary!
+            // It doesn't want to fall, so it would just ignore the movement
+        }
+    }
 
+    function Idle(){
+
+    }
+
+    function getType(){
+        return static::TERRESTRIAL;
+    }
 }

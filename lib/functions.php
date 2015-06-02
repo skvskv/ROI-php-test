@@ -13,3 +13,13 @@
 
         return $result;
     }
+
+    function addArrayComponents($masterArray, $additionsArray)
+    {
+        $result = null;
+        foreach ($masterArray as $k => $v) {
+            $result[$k] = $v + $additionsArray[$k];
+        }
+
+        return $result;
+    }

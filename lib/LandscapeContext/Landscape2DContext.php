@@ -3,6 +3,9 @@
 namespace lib\LandscapeContext;
 
 
+//use lib\Enum\CardinalDirection;
+use lib\RealmEntities\ILandscapePositionedObject;
+
 class Landscape2DContext extends LandscapeContextBase
 {
     const X = 0;
@@ -13,10 +16,21 @@ class Landscape2DContext extends LandscapeContextBase
     const YMax = 3;
 
     /**
+     * row-col indexing
+     * @var null | array
+     */
+    protected $field;
+
+    /**
      * Simple rectangular boundary
      * @var array
      */
     protected $boundaries = [self::XMin => null, self::XMax => null, self::YMin => null, self::YMax => null ];
+
+    protected function init()
+    {
+
+    }
 
     /**
      * @param $boundaries
@@ -69,4 +83,62 @@ class Landscape2DContext extends LandscapeContextBase
 
         return $result;
     }
+
+    /**
+     * @param ILandscapePositionedObject $object
+     * @return LandscapePointBase
+     * @throws PositionOutOfBoundariesException
+     * @throws \Exception
+     */
+    function getTargetPoint(ILandscapePositionedObject $object)
+    {
+        $startPoint = $object->getLandscapePoint();
+        $movementDirection = $object->getDirection();
+        $result = $startPoint;
+        $newPoint = clone $startPoint;
+        $newPosition = addArrayComponents($newPoint->getPosition(), $movementDirection->asVector());
+        $newPoint->setPosition($newPosition);
+        if(!isset($this->field[$newPosition[self::X]][$newPosition[self::Y]]))
+        {
+            $result = $newPoint;
+        } else {
+            if (!is_array($this->field[$newPosition[self::X]][$newPosition[self::Y]]))
+            {
+                $result = $newPoint;
+            } else {
+                switch ($object->getType())
+                {
+                    case ILandscapePositionedObject::AIRBORNE:
+                        $result = $newPoint;
+                        break;
+                    case ILandscapePositionedObject::TERRESTRIAL:
+                        foreach ($this->field[$newPosition[self::X]][$newPosition[self::Y]] as $k => $v)
+                        {
+                            if($v->getType()===ILandscapePositionedObject::TERRESTRIAL){ $result = $startPoint; }
+                        }
+                        break;
+                    default:
+                        throw new \Exception("Unknown LandBasedObject type");
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function doPutObject(ILandscapePositionedObject $object)
+    {
+        $position = $object->getLandscapePoint()->getPosition();
+        $this->field[$position[self::X]][$position[self::Y]][] = $object;
+    }
+
+    protected function doRemoveObject(ILandscapePositionedObject $object)
+    {
+        $position = $object->getLandscapePoint()->getPosition();
+        foreach ($this->field[$position[self::X]][$position[self::Y]] as $k => $v)
+        {
+            if ($v == $object) { unset( $this->field[$position[self::X]][$position[self::Y]][$k] ); }
+        }
+    }
+
 }

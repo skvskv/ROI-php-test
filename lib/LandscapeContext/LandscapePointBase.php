@@ -16,13 +16,12 @@ abstract class LandscapePointBase
     abstract protected function assignPositionFrom($position);
 
     /**
-     * Boundaries - Xmin, Xmax, Ymin, Ymax, ...
-     * @param array $landscapeContext
-     * @throws PositionBadBoundariesException
+     * @param LandscapeContextBase $landscapeContext
      */
-    function __construct(LandscapeContextBase $landscapeContext)
+    function __construct(LandscapeContextBase $landscapeContext, $position=null)
     {
         $this->landscapeContext = $landscapeContext;
+        $this->assignPositionFrom($position);
     }
 
     /**
@@ -45,5 +44,14 @@ abstract class LandscapePointBase
     function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * @return LandscapeContextBase
+     */
+    function getLandscapeContext()
+    {
+        $result = $this->landscapeContext;
+        return $result;
     }
 }

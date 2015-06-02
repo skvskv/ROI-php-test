@@ -23,6 +23,13 @@ class Landscape2DPoint extends LandscapePointBase
      */
     protected function assignPositionFrom($position)
     {
-        $this->position = array_intersect_key($position, $this->position);
+        if (is_null($position)) { return ; }
+        if(is_array($position))
+        {
+            $this->position = array_intersect_key($position, $this->position);
+        }
+        else{
+            throw new \InvalidArgumentException();
+        }
     }
 }
