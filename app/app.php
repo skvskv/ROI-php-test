@@ -24,6 +24,32 @@ require_once "bootstrap.php";
 //$pt->setPosition(['X'=>1, 'Y'=>2]);
 //var_dump($pt);
 
-$pt = new \lib\LandscapeContext\Landscape2DPoint([0,1,2,3]);
-$pt->setPosition([1,2]);
-var_dump($pt);
+//$pt = new \lib\LandscapeContext\Landscape2DPoint([0,1,2,3]);
+//$pt->setPosition([1,2]);
+//var_dump($pt);
+
+//------------------------------
+//$pt = new \lib\LandscapeContext\Landscape2DPoint(
+//    new \lib\LandscapeContext\Landscape2DContext([0,1,2,3])
+//);
+//$pt->setPosition([1,2]);
+    //$pt->setPosition([22,2]);
+    //$pt->setPosition([-1,2]);
+    //$pt->setPosition([1,200]);
+    //$pt->setPosition([1,-2]);
+    //$pt->setPosition([100,-2]);
+//var_dump($pt);
+
+
+//--------------------------------
+//$arr = \lib\Enum\CardinalDirection::asArray();
+//var_dump($arr);
+//var_dump( array_slice($arr, 2) );
+
+
+$cd = new \lib\Enum\CardinalDirection('W');
+echo $cd."\n";
+$cd->rotateRight();
+echo $cd."\n";
+$cd->rotateLeft();
+echo $cd."\n";

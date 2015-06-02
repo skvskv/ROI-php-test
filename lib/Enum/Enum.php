@@ -3,17 +3,14 @@
 namespace lib\Enum;
 
 
+use lib\LandscapeContext\LandscapePointBase;
+
 abstract class Enum {
 
     /**
-     * @var mixed
+     * @var null | int
      */
-    private $theValue = null;
-
-    /**
-     * @var mixed
-     */
-    private $theName = null;
+    private $index = null;
 
     /**
      * @var null | array
@@ -21,40 +18,103 @@ abstract class Enum {
     static protected $constants = null;
 
     /**
+     * @var array
+     */
+    static protected $forwardIndex;
+
+    /**
+     * @var array
+     */
+    static protected $reverseIndex;
+
+    /**
      * @param string $constName
      * @throws EnumException
      */
-    final public function __construct( $constName ) {
+    final function __construct( $constName ) {
         $className = get_called_class();
-
-        $constName = strtoupper( $constName );
+        $constName = mb_strtoupper( $constName );
         if ( constant( "{$className}::{$constName}" )  === NULL ) {
             throw new EnumException( 'The \''.$constName.'\' value is not a member of the \''.$className.'\' enum.' );
         }
-        $this->theName = $constName;
-        $this->theValue = constant( "{$className}::{$constName}" );
+        static::initArraysWhenNecessary();
+        $this->index = static::$reverseIndex[ $constName ];
+
     }
 
-    final public function __toString() {
-        return $this->theName;
+    /**
+     * @return string
+     */
+    final function __toString() {
+        $result = static::$forwardIndex[ $this->index ];
+        return $result;
     }
 
-    final public function get()
+    /**
+     * @return string
+     */
+    final function get()
     {
         return $this->__toString();
     }
 
-    static public function asArray()
+    static protected function initArrays()
     {
-        $result = null;
-        if (is_array(static::$constants)){
-            $result = static::$constants;
-        } else {
-            $refl = new \ReflectionClass(get_called_class());
-            static::$constants = $refl->getConstants();
-            $result = static::$constants;
-        }
+        $reflectionClass = new \ReflectionClass(get_called_class());
+        static::$constants = $reflectionClass->getConstants();
+        static::$forwardIndex = array_keys(static::$constants);
+        static::$reverseIndex = array_flip(static::$forwardIndex);
+    }
+
+    static protected function initArraysWhenNecessary()
+    {
+        if (!is_array(static::$constants)) { static::initArrays(); }
+    }
+
+    /**
+     * @return array
+     */
+    static function asArray()
+    {
+        self::initArraysWhenNecessary();
+        $result = static::$constants;
 
         return $result;
+    }
+
+    /**
+     * @param bool $allowUnderflow
+     * @throws EnumUnderflowException
+     */
+    function shiftPrev($allowUnderflow=false)
+    {
+        $idx = $this->index-1;
+        if(!array_key_exists($idx, static::$reverseIndex))
+        {
+            if ($allowUnderflow===true)
+            {
+                $this->index = -1+count(static::$reverseIndex);
+            } else {
+                throw new EnumUnderflowException();
+            }
+        }
+    }
+
+    /**
+     * @param bool $allowOverflow
+     * @throws EnumOverflowException
+     */
+    function shiftNext($allowOverflow=false)
+    {
+        $idx = $this->index+1;
+        if(!array_key_exists($idx, static::$reverseIndex))
+        {
+            if ($allowOverflow===true)
+            {
+                $this->index = 0;
+            } else {
+                throw new EnumOverflowException();
+            }
+        }
     }
 }
