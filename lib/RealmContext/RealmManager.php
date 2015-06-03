@@ -85,7 +85,7 @@ class RealmManager {
     {
         $result = "";
         foreach ($this->rovers as $roverIndex => $rover) {
-            $result .= $this->getRoverState($rover). "\n";
+            $result .= $this->getRoverStateOutput($rover). "\n";
         }
 
         return $result;
@@ -95,8 +95,9 @@ class RealmManager {
      * @param Rover $rover
      * @return string
      */
-    private function getRoverState(Rover $rover)
+    private function getRoverStateOutput(Rover $rover)
     {
+        $result = null;
         $directionLiteral = $rover->getDirection()."";
         $coordinates = $rover->getLandscapePoint()->getPosition();
         $result = "". $coordinates[0]. " ". $coordinates[1]. " ". $directionLiteral;
