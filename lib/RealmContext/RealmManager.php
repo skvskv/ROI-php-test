@@ -9,6 +9,7 @@ use lib\LandscapeContext\Landscape2DPoint;
 use lib\RealmEntities\Rover;
 
 class RealmManager {
+    const BAD_ARGUMENT_EXECUTESCRIPT = '() argument is neither string nor array of strings.';
 
     /**
      * @var null | Landscape2DContext
@@ -50,10 +51,31 @@ class RealmManager {
     }
 
     /**
+     * @param $scriptText
+     * @return null|string
+     */
+    function executeScript($scriptText)
+    {
+        $result = null;
+        if(is_array($scriptText))
+        {
+            $textLinesArray = $scriptText;
+        } elseif(is_string($scriptText)) {
+            $textArray = trim($scriptText, "\n");
+            $textLinesArray = explode("\n", $textArray);
+        } else {
+            throw new \InvalidArgumentException(__METHOD__. self::BAD_ARGUMENT_EXECUTESCRIPT);
+        }
+        $result = $this->executeScriptArray($textLinesArray);
+
+        return $result;
+    }
+
+    /**
      * @param array $scriptTextLinesArray
      * @return string
      */
-    function executeScript($scriptTextLinesArray)
+    private function executeScriptArray($scriptTextLinesArray)
     {
         reset($scriptTextLinesArray);
         $plateauInitStringInput = current($scriptTextLinesArray);

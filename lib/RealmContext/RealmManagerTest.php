@@ -32,6 +32,17 @@ class RealmManagerTest extends \PHPUnit_Framework_TestCase
     {
         $datasets = [
             [[
+                'result' =>
+                    "1 3 N\n".
+                    "5 1 E\n",
+                'dataFeed' =>
+                    "5 5\n".
+                    "1 2 N\n".
+                    "LMLMLMLMM\n".
+                    "3 3 E\n".
+                    "MMRMMRMRRM\n"
+            ]],
+            [[
                 'result' => "1 3 N\n5 1 E\n",
                 'dataFeed' => [ "5 5",
                             "1 2 N",
@@ -41,7 +52,12 @@ class RealmManagerTest extends \PHPUnit_Framework_TestCase
                 ]
             ]],
             [[
-                'result' => "1 1 W\n0 3 W\n5 2 E\n1 2 N\n3 0 E\n",
+                'result' =>
+                    "1 1 W\n".
+                    "0 3 W\n".
+                    "5 2 E\n".
+                    "1 2 N\n".
+                    "3 0 E\n",
                 'dataFeed' => [
                     "5 5",
                     "1 1 N",
