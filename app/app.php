@@ -61,14 +61,37 @@ $rvr = new \lib\RealmEntities\Rover(
     new \lib\LandscapeContext\Landscape2DPoint($lc, [1,3])
 );
 
-var_dump($rvr);
 $rvr->moveAhead();
-var_dump($rvr);
 $rvr->moveAhead();
-var_dump($rvr);
+$rvr->rotate('L');
+$rvr->moveAhead();
 $rvr2 = new \lib\RealmEntities\Rover(
     new \lib\Enum\CardinalDirection('S'),
     new \lib\LandscapeContext\Landscape2DPoint($lc, [0,4])
 );
 $rvr2->moveAhead();
+$rvr->rotate('L');
+$rvr->moveAhead();
+$rvr->rotate('R');
+$rvr->rotate('R');
+$rvr->rotate('R');
+$rvr->moveAhead();
+$rvr->moveAhead();
+$rvr->rotate('L');
+$rvr->moveAhead();
+$rvr->rotate('R');
+$rvr->moveAhead();
+$rvr->rotate('R');
+$rvr->moveAhead();
+
+$rvr2->rotate('L');
+$rvr2->moveAhead();
+$rvr2->rotate('L');
+$rvr2->moveAhead();
+$rvr2->moveAhead();
+$rvr2->moveAhead();
+$rvr2->moveAhead();
+
+
 var_dump($rvr2);
+var_dump($rvr);

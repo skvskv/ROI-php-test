@@ -2,8 +2,6 @@
 
 namespace lib\LandscapeContext;
 
-
-//use lib\Enum\CardinalDirection;
 use lib\RealmEntities\ILandscapePositionedObject;
 
 class Landscape2DContext extends LandscapeContextBase
@@ -112,9 +110,13 @@ class Landscape2DContext extends LandscapeContextBase
                         $result = $newPoint;
                         break;
                     case ILandscapePositionedObject::TERRESTRIAL:
+                        $result = $newPoint;
                         foreach ($this->field[$newPosition[self::X]][$newPosition[self::Y]] as $k => $v)
                         {
-                            if($v->getType()===ILandscapePositionedObject::TERRESTRIAL){ $result = $startPoint; }
+                            if($v->getType()===ILandscapePositionedObject::TERRESTRIAL)
+                            {
+                                $result = $startPoint;
+                            }
                         }
                         break;
                     default:

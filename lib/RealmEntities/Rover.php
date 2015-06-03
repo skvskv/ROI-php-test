@@ -85,7 +85,6 @@ class Rover implements ILandscapePositionedObject
     {
         $lc = $this->landscapePoint->getLandscapeContext();
         try {
-//            $tpt = $lc->getTargetPoint($this->landscapePoint, $this->direction);
             $tpt = $lc->getTargetPoint($this);
             $lc->removeObject($this);
             $this->setLandscapePoint($tpt);
@@ -102,5 +101,38 @@ class Rover implements ILandscapePositionedObject
 
     function getType(){
         return static::TERRESTRIAL;
+    }
+
+    /**
+     * @param string $commands
+     */
+    function executeCommands($commands)
+    {
+        // Assuming the string is ANSI string - otherwise
+        // string iteration would be far too slow and complex
+        $commandsStrLen = strlen($commands);
+        $commandPointer = null;
+        $command = null;
+        for($commandPointer=0; $commandPointer<$commandsStrLen; $commandPointer++)
+        {
+            $command = $commands[$commandPointer];
+            $this->executeCommand($command);
+        }
+    }
+
+    private function executeCommand($commandLiteral)
+    {
+        switch($commandLiteral)
+        {
+            case 'M':
+                $this->moveAhead();
+                break;
+            case 'L':
+            case 'R':
+                $this->rotate($commandLiteral);
+                break;
+            default:
+                ;
+        }
     }
 }

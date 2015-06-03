@@ -5,7 +5,6 @@ namespace lib\LandscapeContext;
 
 // TODO: Should be represented by two interfaces?
 
-use lib\Enum\CardinalDirection;
 use lib\RealmEntities\ILandscapePositionedObject;
 
 abstract class LandscapeContextBase {
@@ -15,7 +14,6 @@ abstract class LandscapeContextBase {
     abstract protected function assignBoundariesFrom($boundaries);
     abstract function isValidBoundaries($boundaries);
     abstract function isValidCoordinates($position);
-//    abstract function getTargetPoint(LandscapePointBase $startPoint, CardinalDirection $movementDirection);
     abstract function getTargetPoint(ILandscapePositionedObject $object);
     abstract protected function doPutObject(ILandscapePositionedObject $object);
     abstract protected function doRemoveObject(ILandscapePositionedObject $object);
